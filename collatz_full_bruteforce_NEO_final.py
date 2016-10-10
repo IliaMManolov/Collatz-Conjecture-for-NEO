@@ -34,7 +34,9 @@ def main(arguments):
     root = dbopen('neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051')
 
 
-    root['collatz'] = target = ZBigArray((endNumber - startNumber + 1, ), np.uint32)
+    target = root['collatz']
+    if (type(target)!= "wendelin.bigarray.array_zodb.ZBigArray"):
+        target = ZBigArray((endNumber - startNumber + 1, ), np.uint32)
     transaction.commit()
 
     print target.shape
@@ -45,16 +47,15 @@ def main(arguments):
     for sector in range(0, sectorCount):
         #Using the library's bruteforce method to calculate the depths
         tmpStorage = target[sector * chunkSize + startNumber:(sector+1) * chunkSize + startNumber + 1]
-        tmpResults = col.bruteforce(sector * chunkSize + startNumber, (sector+1) * chunkSize + startNumber, 1, optimizationArrayMode)
+        tmpResults = col.bruteforce(sector * chunkSize + startNumber, (sector+1) * chunkSize + startNumber, 1, optimizationArrayMode, tmpStorage)
 
         tmpStorage[:] = tmpResults[:]
-        print tmpStorage
         transaction.commit()
         print 'Calculated chunk %d of %d' %(sector, sectorCount)
 
     if (incompleteSector != 0):
         tmpStorage = target[sectorCount * chunkSize + startNumber:]
-        tmpResults = col.bruteforce(sectorCount * chunkSize + startNumber, sectorCount * chunkSize + startNumber + incompleteSector-1, 1, optimizationArrayMode)
+        tmpResults = col.bruteforce(sectorCount * chunkSize + startNumber, sectorCount * chunkSize + startNumber + incompleteSector-1, 1, optimizationArrayMode, tmpStorage)
         tmpStorage[:] = tmpResults[:]
         print tmpStorage
         transaction.commit()
