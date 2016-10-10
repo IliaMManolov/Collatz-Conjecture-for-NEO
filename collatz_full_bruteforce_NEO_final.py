@@ -33,7 +33,8 @@ def main(arguments):
         print '   /startNumber/ /endNumber/ /optimizationMode/ /chunkSize/ /databaseLocation/ - for custom calculations'
 
     #opening the NEO database
-    root = dbopen('neo://dbname@master')
+    root = dbopen('neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051')
+
 
     root['collatz'] = target = ZBigArray((endNumber - startNumber + 1, ), np.uint32)
     transaction.commit()
