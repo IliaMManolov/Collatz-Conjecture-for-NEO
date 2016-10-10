@@ -54,7 +54,7 @@ def main(arguments):
 
     if (incompleteSector != 0):
         tmpStorage = target[sectorCount * chunkSize + startNumber:]
-        tmpResults = col.bruteforce(sectorCount * chunkSize + startNumber, sectorCount * chunkSize + startNumber + incompleteSector, 1, optimizationArrayMode)
+        tmpResults = col.bruteforce(sectorCount * chunkSize + startNumber, sectorCount * chunkSize + startNumber + incompleteSector-1, 1, optimizationArrayMode)
         tmpStorage[:] = tmpResults[:]
         print tmpStorage
         transaction.commit()
