@@ -42,19 +42,19 @@ def main(arguments):
     sectorCount = (endNumber - startNumber) /chunkSize
     incompleteSector = (endNumber - startNumber) % chunkSize
     print sectorCount
-    for sector in range(0, sectorCount):s
+    for sector in range(0, sectorCount):
         #Using the library's bruteforce method to calculate the depths
-        tmpStorage = target[sector * chunkSize + startNumber:(sector+1) * chunkSize + startNumber]
+        tmpStorage = target[sector * chunkSize + startNumber:(sector+1) * chunkSize + startNumber + 1]
         tmpResults = col.bruteforce(sector * chunkSize + startNumber, (sector+1) * chunkSize + startNumber, 1, optimizationArrayMode)
 
         tmpStorage[:] = tmpResults[:]
         print tmpStorage
         transaction.commit()
         print 'Calculated chunk %d of %d' %(sector, sectorCount)
-    
+
     if (incompleteSector != 0):
         tmpStorage = target[sectorCount * chunkSize + startNumber:]
-        tmpResults = col.bruteforce(sector * chunkSize + startNumber, sector * chunkSize + startNumber + incompleteSector], 1, optimizationArrayMode)
+        tmpResults = col.bruteforce(sectorCount * chunkSize + startNumber, sectorCount * chunkSize + startNumber + incompleteSector-1, 1, optimizationArrayMode)
         tmpStorage[:] = tmpResults[:]
         print tmpStorage
         transaction.commit()
