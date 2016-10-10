@@ -1,6 +1,9 @@
+
 # Misc
 test/
 *.fs
+*.lock
+*.index
 
 
 # Byte-compiled / optimized / DLL files
