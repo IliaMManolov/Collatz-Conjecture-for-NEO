@@ -16,19 +16,11 @@ def main(arguments):
     elif (len(arguments) == 1):
         endNumber = int(arguments[0])
 
-    #Setting up the optimization array
-    optimizationArray = 0
-    if (optimizationArrayMode == 1):
-        optimizationArray = np.zeros((1000), dtype = np.uint32)    #1st case - empty with 1000 elements
-    elif (optimizationArrayMode == 2):
-        optimizationArray = np.zeros((endNumber - startNumber), dtype = np.uint32)   #2nd case - empty with as many elements as the regular array
-    elif (optimizationArrayMode == 3):
-        optimizationArray = col.bruteforce(1, 1000)             #3rd case - filled with answers up to 1000
-    else:
-        optimizationArray = np.array([])        #fallback case - empty(no optimization)
+    result = np.zeros((endNumber - startNumber + 1), dtype = np.uint32)
+
 
     #Using the library's bruteforce method to calculate the depths
-    result = col.bruteforce(startNumber, endNumber+1, 1, optimizationArray)
+    result = col.bruteforce(startNumber, endNumber+1, 1, optimizationArrayMode)
 
 
     #Printing the array
