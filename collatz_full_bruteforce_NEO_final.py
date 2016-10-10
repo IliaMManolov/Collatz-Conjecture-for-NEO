@@ -16,8 +16,6 @@ def main(arguments):
     optimizationArrayMode = 0
     chunkSize = 100000
 
-    if (len(arguments)>=5):
-        databaseLocation = arguments[4]
     if (len(arguments)>=4):
         chunkSize = arguments[3]
     if (len(arguments)>=3):
@@ -29,8 +27,8 @@ def main(arguments):
         print 'This script calculates a list of numbers\' Collatz Conjecture Depth'
         print 'Usage:'
         print '   help - brings out this screen'
-        print '   *no parameters* - calculates the first 10000 numbers and writes them in a file named collatz.fs'
-        print '   /startNumber/ /endNumber/ /optimizationMode/ /chunkSize/ /databaseLocation/ - for custom calculations'
+        print '   *no parameters* - calculates the first 10000 numbers and writes them in the NEO database, specified below'
+        print '   /startNumber/ /endNumber/ /optimizationMode/ /chunkSize/ - for custom calculations'
 
     #opening the NEO database
     root = dbopen('neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051')
@@ -39,19 +37,30 @@ def main(arguments):
     root['collatz'] = target = ZBigArray((endNumber - startNumber + 1, ), np.uint32)
     transaction.commit()
 
+    print target.shape
 
     sectorCount = (endNumber - startNumber) /chunkSize
-    for sector in range(0, sectorCount):
+    incompleteSector = (endNumber - startNumber) % chunkSize
+    print sectorCount
+    for sector in range(0, sectorCount):s
         #Using the library's bruteforce method to calculate the depths
         tmpStorage = target[sector * chunkSize + startNumber:(sector+1) * chunkSize + startNumber]
         tmpResults = col.bruteforce(sector * chunkSize + startNumber, (sector+1) * chunkSize + startNumber, 1, optimizationArrayMode)
 
         tmpStorage[:] = tmpResults[:]
-
+        print tmpStorage
         transaction.commit()
         print 'Calculated chunk %d of %d' %(sector, sectorCount)
+    
+    if (incompleteSector != 0):
+        tmpStorage = target[sectorCount * chunkSize + startNumber:]
+        tmpResults = col.bruteforce(sector * chunkSize + startNumber, sector * chunkSize + startNumber + incompleteSector], 1, optimizationArrayMode)
+        tmpStorage[:] = tmpResults[:]
+        print tmpStorage
+        transaction.commit()
+    print 'Done!'
 
-    db.close()
+    dbclose(root)
 
 
 

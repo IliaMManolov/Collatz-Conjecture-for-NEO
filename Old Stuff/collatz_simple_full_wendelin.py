@@ -58,7 +58,7 @@ def Bruteforce(databaseSize, depthData, transactionSize):
 
 
 def main():
-    root = dbopen('test2.fs')
+    root = dbopen("test2.fs")
 
     databaseSize = input('Enter the highest number you want to get data from: ')
 
@@ -83,4 +83,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()

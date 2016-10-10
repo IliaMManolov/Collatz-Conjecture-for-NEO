@@ -1,5 +1,6 @@
 # Misc
 test/
+*.fs
 
 
 # Byte-compiled / optimized / DLL files
