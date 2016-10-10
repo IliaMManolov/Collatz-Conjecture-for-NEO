@@ -16,7 +16,7 @@ def printData(startNumber, array):
 
 # Regular Bruteforce function for calculating the conjecture - goes through all numbers specified and
 # tries to optimize by checking a given precalculated array
-def bruteforce(startNumber, endNumber, dataFirstNumber = -1, optimizationArrayMode = 0):
+def bruteforce(startNumber, endNumber, dataFirstNumber = -1, optimizationArrayMode = 0, calculatedArray = np.zeros(1, )):
 
 
     #Setting up the optimization array
@@ -32,22 +32,25 @@ def bruteforce(startNumber, endNumber, dataFirstNumber = -1, optimizationArrayMo
 
     results = np.zeros((endNumber - startNumber + 1), dtype = np.uint32)
     for number in range(startNumber, endNumber):
-        tmpNumber = number
-        steps = 0
-
-        while (tmpNumber != 1 and exists(tmpNumber, dataFirstNumber, optimizationArray) == -1):
-            if (tmpNumber % 2 == 0):
-                tmpNumber/=2
-            else:
-                tmpNumber = tmpNumber * 3 + 1
-            steps+=1
-
-        if (tmpNumber == 1):
-            results[number - startNumber] = steps
+        if (calculatedArray.size!=1 and calculatedArray[number - startNumber] != 0):
+            results[number - startNumber] = calculatedArray[number - startNumber]
         else:
-            results[number - startNumber] = exists(tmpNumber, dataFirstNumber, optimizationArray) + steps
+            tmpNumber = number
+            steps = 0
 
-        if (dataFirstNumber != -1 and number >= dataFirstNumber and number < dataFirstNumber + optimizationArray.size):
-            optimizationArray[number - dataFirstNumber] = results[number-startNumber]
+            while (tmpNumber != 1 and exists(tmpNumber, dataFirstNumber, optimizationArray) == -1):
+                if (tmpNumber % 2 == 0):
+                    tmpNumber/=2
+                else:
+                    tmpNumber = tmpNumber * 3 + 1
+                steps+=1
+
+            if (tmpNumber == 1):
+                results[number - startNumber] = steps
+            else:
+                results[number - startNumber] = exists(tmpNumber, dataFirstNumber, optimizationArray) + steps
+
+            if (dataFirstNumber != -1 and number >= dataFirstNumber and number < dataFirstNumber + optimizationArray.size):
+                optimizationArray[number - dataFirstNumber] = results[number-startNumber]
 
     return results
