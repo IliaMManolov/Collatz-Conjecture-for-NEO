@@ -35,7 +35,7 @@ def main(arguments):
 
 
     if (type(root['collatz'])!= "wendelin.bigarray.array_zodb.ZBigArray"):
-        root['collatz'] = ZBigArray((endNumber - startNumber + 1, ), np.uint32)
+        root['collatz'] = ZBigArray((endNumber + 1, ), np.uint32)
     transaction.commit()
 
     target = root['collatz']
