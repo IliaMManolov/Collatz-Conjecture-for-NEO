@@ -54,7 +54,7 @@ def main(arguments):
         print 'Calculated chunk %d of %d' %(sector, sectorCount)
 
     if (incompleteSector != 0):
-        tmpStorage = target[sectorCount * chunkSize + startNumber:]
+        tmpStorage = target[sectorCount * chunkSize + startNumber : ]
         tmpResults = col.bruteforce(sectorCount * chunkSize + startNumber, sectorCount * chunkSize + startNumber + incompleteSector-1, 1, optimizationArrayMode, tmpStorage)
         tmpStorage[:] = tmpResults[:]
         print tmpStorage
