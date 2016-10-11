@@ -33,9 +33,11 @@ def main(arguments):
     #opening the NEO database
     root = dbopen('neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051')
 
-
+    #Check if the partition is created and sized properly
     if (type(root['collatz'])!= "wendelin.bigarray.array_zodb.ZBigArray"):
-        root['collatz'] = ZBigArray((endNumber + 1, ), np.uint32)
+        root['collatz'] = ZBigArray((endNumber + 1, ), np.uint64)
+    elif (root['collatz'].size <= endNumber)
+        root['collatz'] = root['collatz'].resize(endNumber + 1, )
     transaction.commit()
 
     target = root['collatz']
