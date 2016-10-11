@@ -17,7 +17,7 @@ def main(arguments):
     chunkSize = 100000
 
     if (len(arguments)>=4):
-        chunkSize = arguments[3]
+        chunkSize = int(arguments[3])
     if (len(arguments)>=3):
         optimizationArrayMode = int(arguments[2])
     if (len(arguments)>=2):
