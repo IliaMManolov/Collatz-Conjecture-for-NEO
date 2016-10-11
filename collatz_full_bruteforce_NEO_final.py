@@ -36,7 +36,7 @@ def main(arguments):
     #Check if the partition is created and sized properly
     if (type(root['collatz'])!= "wendelin.bigarray.array_zodb.ZBigArray"):
         root['collatz'] = ZBigArray((endNumber + 1, ), np.uint64)
-    elif (root['collatz'].size <= endNumber)
+    elif (root['collatz'].size <= endNumber):
         root['collatz'] = root['collatz'].resize(endNumber + 1, )
     transaction.commit()
 
