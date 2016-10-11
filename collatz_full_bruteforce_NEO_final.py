@@ -34,9 +34,11 @@ def main(arguments):
     root = dbopen('neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051')
 
 
+    if (type(root['collatz'])!= "wendelin.bigarray.array_zodb.ZBigArray"):
+        root['collatz'] = ZBigArray((endNumber - startNumber + 1, ), np.uint32)
+    transaction.commit()
+
     target = root['collatz']
-    if (type(target)!= "wendelin.bigarray.array_zodb.ZBigArray"):
-        target = ZBigArray((endNumber - startNumber + 1, ), np.uint32)
     transaction.commit()
 
     print target.shape
@@ -54,6 +56,7 @@ def main(arguments):
         print 'Calculated chunk %d of %d' %(sector, sectorCount)
 
     if (incompleteSector != 0):
+        print sectorCount * chunkSize + startNumber
         tmpStorage = target[sectorCount * chunkSize + startNumber:]
         tmpResults = col.bruteforce(sectorCount * chunkSize + startNumber, sectorCount * chunkSize + startNumber + incompleteSector-1, 1, optimizationArrayMode, tmpStorage)
         tmpStorage[:] = tmpResults[:]
