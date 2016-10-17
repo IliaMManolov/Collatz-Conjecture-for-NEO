@@ -38,7 +38,7 @@ def main(arguments):
         root['collatz'] = ZBigArray((endNumber + 1, ), np.uint64)
         print "I'm crapping myself here: %s" % str(type(root['collatz']))
     elif (root['collatz'].size <= endNumber):
-        root['collatz'] = root['collatz'].resize(endNumber + 1, )
+        root['collatz'] = root['collatz'].resize((endNumber + 1, ))
         print "I'm crapping myself there: %d, %d" %(root['collatz'].size, endNumber)
     transaction.commit()
 
