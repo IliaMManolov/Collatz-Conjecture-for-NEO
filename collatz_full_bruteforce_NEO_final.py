@@ -34,7 +34,7 @@ def main(arguments):
     root = dbopen('neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051')
 
     #Check if the partition is created and sized properly
-    if (type(root['collatz']) != "wendelin.bigarray.array_zodb.ZBigArray"):
+    if (type(root['collatz']) != "<class 'wendelin.bigarray.array_zodb.ZBigArray'>"):
         root['collatz'] = ZBigArray((endNumber + 1, ), np.uint64)
         print "I'm crapping myself here: %s" % str(type(root['collatz']))
     elif (root['collatz'].size <= endNumber):
