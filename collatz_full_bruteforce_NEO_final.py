@@ -60,11 +60,11 @@ def main(arguments):
         print 'Calculated chunk %d of %d' %(sector, sectorCount)
 
     if (incompleteSector != 0):
-        print sectorCount * chunkSize + startNumber
+        #print sectorCount * chunkSize + startNumber
         tmpStorage = target[sectorCount * chunkSize + startNumber:endNumber]
         tmpResults = col.bruteforce(sectorCount * chunkSize + startNumber, sectorCount * chunkSize + startNumber + incompleteSector-1, 1, optimizationArrayMode, tmpStorage)
         tmpStorage[:] = tmpResults[:]
-        print tmpStorage
+        #print tmpStorage
         transaction.commit()
     print 'Done!'
 
