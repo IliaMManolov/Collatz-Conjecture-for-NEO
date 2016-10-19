@@ -48,6 +48,7 @@ def main():
     transaction.commit()
 
     logging.info('Setup passed successfully!')
+    print 'Setup passed successfully!'
 
     sectorCount = (arguments.range[1] - arguments.range[0]) / arguments.chunk
     incompleteSector = (arguments.range[1] - arguments.range[0]) % arguments.chunk        #in case the range isn't divisable by the sector size
@@ -66,22 +67,26 @@ def main():
         transaction.commit()
 
         logging.info('Calculated chunk %d of %d.' %(sector, sectorCount))
+        print 'Calculated chunk %d of %d.' %(sector, sectorCount)
+
 
     if (incompleteSector != 0):
         #doing the same thing as before, but just with the last, smaller chunk
         logging.info('Calculating incomplete sector of %d elements...' %incompleteSector)
+        print 'Calculating incomplete sector of %d elements...' %incompleteSector
 
         tmpStorage = target[sectorCount * arguments.chunk + arguments.range[0]:arguments.range[1]]
         tmpResults = col.bruteforce(sectorCount * arguments.chunk + arguments.range[0], sectorCount * arguments.chunk + arguments.range[0] + incompleteSector-1, 1, arguments.optimization, tmpStorage)
 
         if (tmpStorage.size != tmpResults.size):
-            logging.exception('The calculated np.array(%d) has a different size from the loaded part of the ZBigArray(%d).' %(tmpResults.size, tmpStorage.size))
+            logging.error('The calculated np.array(%d) has a different size from the loaded part of the ZBigArray(%d).' %(tmpResults.size, tmpStorage.size))
             return
 
         tmpStorage[:] = tmpResults[:]
         transaction.commit()
 
     logging.info('All done!')
+    print 'All done!'
 
 if (__name__ == "__main__"):
     main()
