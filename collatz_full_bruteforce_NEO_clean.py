@@ -16,25 +16,33 @@ parser.add_argument('--optimization', '-o', type=int, default = 0, help="the opt
 parser.add_argument('--chunk', '-c', type=int, default=10000, help="the size of a single commit chunk in elements")
 parser.add_argument('--database', '-db', type=str, default='neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051', help="address of the NEO database")
 
-logging.basicConfig(filename='Collatz.log', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', filename='Collatz.log', level=logging.INFO)
 
 def main():
     arguments = parser.parse_args()
 
     #opening the NEO database
     root = dbopen('neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051')
-    assert (root==None):
-        logging.exception("Unable to open NEO database")
+    if (root==None):
+        logging.error("Unable to open NEO database")
+        return
+
     target = root[parser.name]
     logging.info("Successfully opened NEO database")
 
     #Check if the partition is created and sized properly
     if (str(type(target)) != "<class 'wendelin.bigarray.array_zodb.ZBigArray'>"):
         logging.warning('The class at index %s isn\'t a ZBigArray. Overwriting...' %parser.name)
-        target = ZBigArray((parser.range[1] + 1, ), np.uint64)
+        try:
+            target = ZBigArray((parser.range[1] + 1, ), np.uint64)
+        except:
+            logging.exception('Unable to create a ZBigArray.')
     elif (target.size <= parser.range[1]):
         logging.warning('The current ZBigArray is too small. Resizing...')
-        target.resize((parser.range[1] + 1, ))
+        try:
+            target.resize((parser.range[1] + 1, ))
+        except:
+            logging.exception('Could not resize the ZBigArray.')
     transaction.commit()
 
     logging.info('Setup passed successfully!')
@@ -47,8 +55,9 @@ def main():
         tmpStorage = target[sector * parser.chunk + parser.range[0]:(sector+1) * chunk + parser.range[0] + 1]
         tmpResults = col.bruteforce(sector * parser.chunk + parser.range[0], (sector+1) * parser.chunk + parser.range[0], 1, parser.optimization, tmpStorage)
 
-        assert (tmpStorage.size != tmpResults.size):
-            logging.exception('The calculated np.array(%d) has a different size from the loaded part of the ZBigArray(%d).' %(tmpResults.size, tmpStorage.size))
+        if (tmpStorage.size != tmpResults.size):
+            logging.error('The calculated np.array(%d) has a different size from the loaded part of the ZBigArray(%d).' %(tmpResults.size, tmpStorage.size))
+            return
 
         #Storing the results from the chunk into the ZBigArray
         tmpStorage[:] = tmpResults[:]
@@ -63,9 +72,10 @@ def main():
         tmpStorage = target[sectorCount * parser.chunk + parser.range[0]:parser.range[1]]
         tmpResults = col.bruteforce(sectorCount * parser.chunk + parser.range[0], sectorCount * parser.chunk + parser.range[0] + incompleteSector-1, 1, parser.optimization, tmpStorage)
 
-        assert (tmpStorage.size != tmpResults.size):
+        if (tmpStorage.size != tmpResults.size):
             logging.exception('The calculated np.array(%d) has a different size from the loaded part of the ZBigArray(%d).' %(tmpResults.size, tmpStorage.size))
-
+            return
+            
         tmpStorage[:] = tmpResults[:]
         transaction.commit()
 
