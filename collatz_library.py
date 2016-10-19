@@ -23,7 +23,7 @@ def bruteforce(startNumber, endNumber, dataFirstNumber = -1, optimizationArrayMo
     optimizationArray = 0
     if (optimizationArrayMode == 0):
         optimizationArray = np.array([])        #0th case - no optimization
-    if (optimizationArrayMode == 1):
+    elif (optimizationArrayMode == 1):
         optimizationArray = np.zeros((1000), dtype = np.uint32)    #1st case - empty with 1000 elements
     elif (optimizationArrayMode == 2):
         optimizationArray = np.zeros((endNumber - startNumber), dtype = np.uint32)   #2nd case - empty with as many elements as the regular array
