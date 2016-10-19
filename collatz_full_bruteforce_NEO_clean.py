@@ -22,7 +22,7 @@ def main():
     arguments = parser.parse_args()
 
     #opening the NEO database
-    root = dbopen('neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051')
+    root = dbopen(arguments.database)
     if (root==None):
         logging.error("Unable to open NEO database")
         return
