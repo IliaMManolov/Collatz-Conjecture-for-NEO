@@ -12,7 +12,7 @@ import transaction
 parser = argparse.ArgumentParser(description='A simple tool for storing the depth of operations of the Collatz conjecture for numbers in a NEO database')
 parser.add_argument('--range', '-r', type=int, nargs=2, default = [1, 100000], help="the range of numbers to be calculated")
 parser.add_argument('--name', '-n', type=str, default='CollatzConjectureResults', help="the name of the index in the NEO database that will store the numbers")
-parser.add_argument('--optimization', '-o', type=int, default = 0, help="the optimization mode:\n0 - no optimization;\n1 - an empty np.array of 1000 elements;\n2 - an empty np.array with the same size as the input range\n3 - a filled array of 1000 elements")
+parser.add_argument('--optimization', '-o', type=int, default = 0, help="the optimization mode:\n0 - no optimization;\n1 - an empty np.array of 1000 elements;\n2 - an empty np.array with the same size as the input range;\n3 - a filled array of 1000 elements;\nn - a filled array of n elements")
 parser.add_argument('--chunk', '-c', type=int, default=10000, help="the size of a single commit chunk in elements")
 parser.add_argument('--database', '-db', type=str, default='neo://neo-iliya-comp-2592@[2001:67c:1254:2b::347e]:2051', help="address of the NEO database")
 

@@ -21,6 +21,8 @@ def bruteforce(startNumber, endNumber, dataFirstNumber = -1, optimizationArrayMo
 
     #Setting up the optimization array
     optimizationArray = 0
+    if (optimizationArrayMode == 0):
+        optimizationArray = np.array([])        #0th case - no optimization
     if (optimizationArrayMode == 1):
         optimizationArray = np.zeros((1000), dtype = np.uint32)    #1st case - empty with 1000 elements
     elif (optimizationArrayMode == 2):
@@ -28,7 +30,7 @@ def bruteforce(startNumber, endNumber, dataFirstNumber = -1, optimizationArrayMo
     elif (optimizationArrayMode == 3):
         optimizationArray = bruteforce(1, 1000)             #3rd case - filled with answers up to 1000
     else:
-        optimizationArray = np.array([])        #fallback case - empty(no optimization)
+        optimizationArray = bruteforce(1, optimizationArrayMode) #4th case - filled with answers up to the argument
 
     results = np.zeros((endNumber - startNumber + 1), dtype = np.uint32)
     for number in range(startNumber, endNumber):
