@@ -27,33 +27,33 @@ def main():
         logging.error("Unable to open NEO database")
         return
 
-    target = root[parser.name]
+    target = root[arguments.name]
     logging.info("Successfully opened NEO database")
 
     #Check if the partition is created and sized properly
     if (str(type(target)) != "<class 'wendelin.bigarray.array_zodb.ZBigArray'>"):
-        logging.warning('The class at index %s isn\'t a ZBigArray. Overwriting...' %parser.name)
+        logging.warning('The class at index %s isn\'t a ZBigArray. Overwriting...' %arguments.name)
         try:
-            target = ZBigArray((parser.range[1] + 1, ), np.uint64)
+            target = ZBigArray((arguments.range[1] + 1, ), np.uint64)
         except:
             logging.exception('Unable to create a ZBigArray.')
-    elif (target.size <= parser.range[1]):
+    elif (target.size <= arguments.range[1]):
         logging.warning('The current ZBigArray is too small. Resizing...')
         try:
-            target.resize((parser.range[1] + 1, ))
+            target.resize((arguments.range[1] + 1, ))
         except:
             logging.exception('Could not resize the ZBigArray.')
     transaction.commit()
 
     logging.info('Setup passed successfully!')
 
-    sectorCount = (parser.range[1] - parser.range[0]) / parser.chunk
-    incompleteSector = (parser.range[1] - parser.range[0]) % parser.chunk        #in case the range isn't divisable by the sector size
+    sectorCount = (arguments.range[1] - arguments.range[0]) / arguments.chunk
+    incompleteSector = (arguments.range[1] - arguments.range[0]) % arguments.chunk        #in case the range isn't divisable by the sector size
 
     for sector in range(0, sectorCount):
         #Using the library's bruteforce method to calculate the depths
-        tmpStorage = target[sector * parser.chunk + parser.range[0]:(sector+1) * chunk + parser.range[0] + 1]
-        tmpResults = col.bruteforce(sector * parser.chunk + parser.range[0], (sector+1) * parser.chunk + parser.range[0], 1, parser.optimization, tmpStorage)
+        tmpStorage = target[sector * arguments.chunk + arguments.range[0]:(sector+1) * chunk + arguments.range[0] + 1]
+        tmpResults = col.bruteforce(sector * arguments.chunk + arguments.range[0], (sector+1) * arguments.chunk + arguments.range[0], 1, arguments.optimization, tmpStorage)
 
         if (tmpStorage.size != tmpResults.size):
             logging.error('The calculated np.array(%d) has a different size from the loaded part of the ZBigArray(%d).' %(tmpResults.size, tmpStorage.size))
@@ -69,13 +69,13 @@ def main():
         #doing the same thing as before, but just with the last, smaller chunk
         logging.info('Calculating incomplete sector of %d elements...' %incompleteSector)
 
-        tmpStorage = target[sectorCount * parser.chunk + parser.range[0]:parser.range[1]]
-        tmpResults = col.bruteforce(sectorCount * parser.chunk + parser.range[0], sectorCount * parser.chunk + parser.range[0] + incompleteSector-1, 1, parser.optimization, tmpStorage)
+        tmpStorage = target[sectorCount * arguments.chunk + arguments.range[0]:arguments.range[1]]
+        tmpResults = col.bruteforce(sectorCount * arguments.chunk + arguments.range[0], sectorCount * arguments.chunk + arguments.range[0] + incompleteSector-1, 1, arguments.optimization, tmpStorage)
 
         if (tmpStorage.size != tmpResults.size):
             logging.exception('The calculated np.array(%d) has a different size from the loaded part of the ZBigArray(%d).' %(tmpResults.size, tmpStorage.size))
             return
-            
+
         tmpStorage[:] = tmpResults[:]
         transaction.commit()
 
