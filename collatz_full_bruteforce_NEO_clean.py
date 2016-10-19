@@ -27,6 +27,8 @@ def main():
         logging.error("Unable to open NEO database")
         return
 
+    if (!root.has_key(arguments.name)):
+        root[arguments.name] = ZBigArray((arguments.range[1] + 1, ), np.uint64)
     target = root[arguments.name]
     logging.info("Successfully opened NEO database")
 
