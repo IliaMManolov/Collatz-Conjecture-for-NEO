@@ -52,7 +52,7 @@ def main():
 
     for sector in range(0, sectorCount):
         #Using the library's bruteforce method to calculate the depths
-        tmpStorage = target[sector * arguments.chunk + arguments.range[0]:(sector+1) * chunk + arguments.range[0] + 1]
+        tmpStorage = target[sector * arguments.chunk + arguments.range[0]:(sector+1) * arguments.chunk + arguments.range[0] + 1]
         tmpResults = col.bruteforce(sector * arguments.chunk + arguments.range[0], (sector+1) * arguments.chunk + arguments.range[0], 1, arguments.optimization, tmpStorage)
 
         if (tmpStorage.size != tmpResults.size):
